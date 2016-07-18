@@ -4,8 +4,9 @@ from __future__ import print_function
 from io import StringIO
 from os import getcwd
 from os.path import basename
-from subprocess import check_output
-from tempfile import NamedTemporaryFile
+from subprocess import Popen, PIPE
+
+import sys
 
 
 from IPython.core.magic import (Magics, magics_class, line_magic,
@@ -54,10 +55,9 @@ class SlurmMagics(Magics):
 
     @cell_magic
     def sbatch(self, line, cell):
-        with NamedTemporaryFile(dir=getcwd(), delete=False) as stream:
-            stream.write(cell)
-            name = basename(stream.name)
-        return self._execute(["sbatch"] + line.split() + [name])
+        with StringIO(cell) as stdin:
+            return self._execute(["sbatch"] + line.split(), input=cell,
+                                 stderr=True)
 
     def _squeue(self, line):
         return self._slurm_line_magic("squeue", line)
@@ -69,8 +69,13 @@ class SlurmMagics(Magics):
         # doesn't do anything.
         return command, line, cell
 
-    def _execute(self, args):
-        return check_output(args).decode("utf-8")
+    def _execute(self, args, input=None, stderr=False):
+        process = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        stdout, stderr = process.communicate(input)
+        if stderr:
+            return stdout.decode("utf-8"), stderr.decode("utf-8")
+        else:
+            return stdout.decode("utf-8")
 
 
 def load_ipython_extension(ip):
