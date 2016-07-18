@@ -2,7 +2,10 @@
 from __future__ import print_function
 
 from io import StringIO
+from os import getcwd
+from os.path import basename
 from subprocess import check_output
+from tempfile import NamedTemporaryFile
 
 
 from IPython.core.magic import (Magics, magics_class, line_magic,
@@ -49,15 +52,25 @@ class SlurmMagics(Magics):
     def squeue(self, line):
         return self._squeue(line)
 
+    @cell_magic
+    def sbatch(self, line, cell):
+        with NamedTemporaryFile(dir=getcwd(), delete=False) as stream:
+            stream.write(cell)
+            name = basename(stream.name)
+        return self._execute(["sbatch"] + line.split() + [name])
+
     def _squeue(self, line):
         return self._slurm_line_magic("squeue", line)
 
     def _slurm_line_magic(self, command, line):
-        return check_output([command] + line.split()).decode("utf-8")
+        return self._execute([command] + line.split())
 
     def _slurm_cell_magic(self, command, line, cell):
-        # could be used to package a cell into a batch script and submit it
-        pass
+        # doesn't do anything.
+        return command, line, cell
+
+    def _execute(self, args):
+        return check_output(args).decode("utf-8")
 
 
 def load_ipython_extension(ip):
