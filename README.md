@@ -1,4 +1,6 @@
 
+https://travis-ci.org/NERSC/slurm-magic.svg?branch=master
+
 SLURM-MAGIC
 ===========
 
