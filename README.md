@@ -41,4 +41,8 @@ This is a cell magic command that takes the contents of a cell and submits it to
     nid00044
     ...
 
+What Our Users Say
+------------------
 
+    I’ll never have to leave a notebook again
+    that’s like the ultimate dream
