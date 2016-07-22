@@ -18,9 +18,78 @@ Suggestions on how to handle the output are welcome --- the raw responses are no
 SLURM Magic Commands
 --------------------
 
+First, things to do:
+
+* Strategy (or no implementation) for interactive Slurm commands.
+* The "mode" thing needs to be renamed.
+* Logical approach to srun (auto-wrap in salloc?).
+* Implement and document how to get help.
+
+### %sacct (TBD)
+
+Displays accounting data for all jobs and job steps in the Slurm job accounting log or Slurm database.
+
+### %sacctmgr (TBC)
+
+Used to view and modify Slurm account information.
+
+### %salloc (TBC)
+
+Obtain a Slurm job allocation (a set of nodes), execute a command, and then release the allocation when the command is finished.
+
+### %sattach (TBC)
+
+Attach to a Slurm job step.
+
+### %%sbatch
+
+Submit a batch script to Slurm.
+
+This is a cell magic command that takes the contents of a cell and submits it to the batch queue.
+
+    In [2]: %%sbatch -p debug -t 10 -N 1
+    #!/bin/bash
+    srun -n 32 hostname
+    ...:
+    Out[2]: u'Submitted batch job 2754280\n'
+
+    In [3]: !cat slurm-2754280.out
+    nid00044
+    nid00044
+    ...
+
+### %sbcast (TBC)
+
+Transmit a file to the nodes allocated to a Slurm job.
+
+### %scancel (TBD)
+
+Used to signal jobs or job steps that are under the control of Slurm.
+
+### %scontrol (TBC)
+
+Used view and modify Slurm configuration and state.
+
+### %sdiag (TBC)
+
+Scheduling diagnostic tool for Slurm.
+
+### %sinfo (TBD)
+
+View information about Slurm nodes and partitions.
+
+### %smap (TBC)
+
+Graphically view information about Slurm jobs, partitions, and set configurations parameters.
+
+### %sprio (TBD)
+
+View the factors that comprise a job's scheduling priority.
+
 ### %squeue
 
-This is a line magic command that runs squeue.  
+View information about jobs located in the Slurm scheduling queue.
+
 To switch to "pandas" mode simply do:
 
     In [2]: %mode pandas
@@ -29,27 +98,36 @@ To switch to "pandas" mode simply do:
 Now the output from %squeue will be a Pandas dataframe:
 
     In [3]: %squeue -u rthomas
-    Out[3]: 
+    Out[3]:
          JOBID     USER ACCOUNT NAME PARTITION    QOS  NODES TIME_LIMIT  TIME ST  \
-    0  2764292  rthomas   mpccc   sh     debug  debug      1      10:00  0:11  R   
-    
-       PRIORITY          SUBMIT_TIME           START_TIME  
-    0     69060  2016-07-21T21:12:34  2016-07-21T21:13:21 
+    0  2764292  rthomas   mpccc   sh     debug  debug      1      10:00  0:11  R
 
-### %%sbatch
+       PRIORITY          SUBMIT_TIME           START_TIME
+    0     69060  2016-07-21T21:12:34  2016-07-21T21:13:21
 
-This is a cell magic command that takes the contents of a cell and submits it to the batch queue.
+### %sreport (TBD)
 
-    In [2]: %%sbatch -p debug -t 10 -N 1
-    #!/bin/bash
-    srun -n 32 hostname
-    ...: 
-    Out[2]: u'Submitted batch job 2754280\n'
-    
-    In [3]: !cat slurm-2754280.out
-    nid00044
-    nid00044
-    ...
+Generate reports from the slurm accounting data.
+
+### %srun (TBC)
+
+Run parallel jobs.
+
+### %sshare (TBC)
+
+Tool for listing the shares of associations to a cluster.
+
+### %sstat (TBD)
+
+Display various status information of a running job/step.
+
+### %strigger (TBC)
+
+Used set, get or clear Slurm trigger information.
+
+### %sview (TBC)
+
+Graphical user interface to view and modify Slurm state.
 
 What Our Users Say
 ------------------
