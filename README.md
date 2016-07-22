@@ -26,7 +26,15 @@ To switch to "pandas" mode simply do:
     In [2]: %mode pandas
     Out[2]: 'pandas'
 
-Now the output from %squeue will be a Pandas dataframe.
+Now the output from %squeue will be a Pandas dataframe:
+
+    In [3]: %squeue -u rthomas
+    Out[3]: 
+         JOBID     USER ACCOUNT NAME PARTITION    QOS  NODES TIME_LIMIT  TIME ST  \
+    0  2764292  rthomas   mpccc   sh     debug  debug      1      10:00  0:11  R   
+    
+       PRIORITY          SUBMIT_TIME           START_TIME  
+    0     69060  2016-07-21T21:12:34  2016-07-21T21:13:21 
 
 ### %%sbatch
 
