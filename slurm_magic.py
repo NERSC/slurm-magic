@@ -1,28 +1,28 @@
 
 from __future__ import print_function
 
-from io import StringIO
-from os import getcwd
-from os.path import basename
-from subprocess import Popen, PIPE
-
+import inspect
+import io
+from subprocess import (Popen, PIPE)
 import sys
 
+import pandas
 
-from IPython.core.magic import (Magics, magics_class, line_magic,
-                                cell_magic, line_cell_magic)
+from IPython.core.magic import (Magics, magics_class, line_magic, cell_magic,
+        line_cell_magic)
 from IPython.core.magic_arguments import (argument, magic_arguments,
-                                          parse_argstring)
+        parse_argstring)
 
 
 def modal(func):
     def wrapped_func(obj, line):
         result = func(obj, line)
-        if obj._mode == "pandas":
-            import pandas
-            return pandas.read_table(StringIO(result), sep='\s+')
+        if obj._display == "pandas":
+            return pandas.read_table(io.StringIO(result), sep='\s+',
+                    error_bad_lines=False)
         else:
             return result
+    wrapped_func.__doc__ = func.__doc__
     return wrapped_func
 
 
@@ -31,46 +31,134 @@ class SlurmMagics(Magics):
 
     def __init__(self, shell=None, **kwargs):
         super(SlurmMagics, self).__init__(shell, **kwargs)
-        self._mode = None
+        self._display = "pandas"
 
     @line_magic
-    def mode(self, line):
-        cleaned = line.strip().lower()
-        if cleaned:
-            if cleaned == "pandas":
-                self._mode = "pandas"
-            elif cleaned == "none":
-                self._mode = None
-            else:
-                raise ValueError("Unknown SLURM magics mode:", line)
-        else:
-            if not hasattr(self, "_mode"):
-                self._mode = None
-        return self._mode if self._mode else "no mode set"
+    def slurm(self, line):
+        chunks = line.lower().split()
+        variable, arguments = chunks[ 0 ], chunks[ 1 : ]
+        if variable == "display" :
+            return self._configure_display(arguments)
+
+    def _configure_display(self, arguments):
+        if arguments:
+            mode = arguments[0]
+            if mode not in [ "pandas", "raw" ] :
+                raise ValueError("Unknown Slurm magics display mode", mode)
+            self._display = mode
+        return self._display
+
+    @modal
+    @line_magic
+    def sacct(self, line):
+        """Display accounting data for all jobs and job steps in the Slurm job
+        accounting log or Slurm database."""
+        return self._execute(line)
+
+    @modal
+    @line_magic
+    def sacctmgr(self, line):
+        """View and modify Slurm account information."""
+        return self._execute(line)
+
+    @line_magic
+    def salloc(self, line):
+        """Obtain a Slurm job allocation (a set of nodes), execute a command,
+        and then release the allocation when the command is finished."""
+        return self._execute(line)
+
+    @line_magic
+    def sattach(self, line):
+        """Attach to a Slurm job step."""
+        pass
+
+    @cell_magic
+    def sbatch(self, line, cell):
+        """Submit a batch script to Slurm."""
+        # FIXME Document further.
+        return self._execute(line, input=cell.encode(encoding='UTF-8'))
+
+    @line_magic
+    def sbcast(self, line):
+        """Transmit a file to the nodes allocated to a Slurm job."""
+        pass
+
+    @line_magic
+    def scancel(self, line):
+        """Used to signal jobs or job steps that are under the control of
+        Slurm."""
+        return self._execute(line)
+
+    @line_magic
+    def scontrol(self, line):
+        """Used view and modify Slurm configuration and state."""
+        return self._execute(line)
+
+    @modal
+    @line_magic
+    def sdiag(self, line):
+        """Scheduling diagnostic tool for Slurm."""
+        return self._execute(line)
+
+    @modal
+    @line_magic
+    def sinfo(self, line):
+        """View information about Slurm nodes and partitions."""
+        return self._execute(line)
+
+    @line_magic
+    def smap(self, line):
+        """Graphically view information about Slurm jobs, partitions, and set
+        configurations parameters."""
+        pass
+
+    @modal
+    @line_magic
+    def sprio(self, line):
+        """View the factors that comprise a job's scheduling priority."""
+        return self._execute(line)
 
     @modal
     @line_magic
     def squeue(self, line):
-        return self._squeue(line)
+        """View information about jobs located in the Slurm scheduling
+        queue."""
+        return self._execute(line)
 
-    @cell_magic
-    def sbatch(self, line, cell):
-        with StringIO(cell) as stdin:
-            return self._execute(["sbatch"] + line.split(), input=cell,
-                                 stderr=True)
+    @line_magic
+    def sreport(self, line):
+        """Generate reports from the slurm accounting data."""
+        pass
 
-    def _squeue(self, line):
-        return self._slurm_line_magic("squeue", line)
+    @line_magic
+    def srun(self, line):
+        """Run parallel jobs."""
+        pass
 
-    def _slurm_line_magic(self, command, line):
-        return self._execute([command] + line.split())
+    @modal
+    @line_magic
+    def sshare(self, line):
+        """Tool for listing the shares of associations to a cluster."""
+        return self._execute(line)
 
-    def _slurm_cell_magic(self, command, line, cell):
-        # doesn't do anything.
-        return command, line, cell
+    @line_magic
+    def sstat(self, line):
+        """Display various status information of a running job/step."""
+        pass
 
-    def _execute(self, args, input=None, stderr=False):
-        process = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    @line_magic
+    def strigger(self, line):
+        """Used set, get or clear Slurm trigger information."""
+        pass
+
+    @line_magic
+    def sview(self, line):
+        """Graphical user interface to view and modify Slurm state."""
+        pass
+
+    def _execute(self, line, input=None, stderr=False):
+        name = inspect.stack()[1][3]
+        process = Popen([name] + line.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
         stdout, stderr = process.communicate(input)
         if stderr:
             return stdout.decode("utf-8"), stderr.decode("utf-8")

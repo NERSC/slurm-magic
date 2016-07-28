@@ -25,15 +25,17 @@ First, things to do:
 * Logical approach to srun (auto-wrap in salloc?).
 * Implement and document how to get help.
 
-### %sacct (TBD)
+### %sacct
 
-Displays accounting data for all jobs and job steps in the Slurm job accounting log or Slurm database.
+Display accounting data for all jobs and job steps in the Slurm job accounting log or Slurm database.
+Is modal.
 
-### %sacctmgr (TBC)
+### %sacctmgr
 
-Used to view and modify Slurm account information.
+View and modify Slurm account information.
+Is modal.
 
-### %salloc (TBC)
+### %salloc
 
 Obtain a Slurm job allocation (a set of nodes), execute a command, and then release the allocation when the command is finished.
 
@@ -62,33 +64,37 @@ This is a cell magic command that takes the contents of a cell and submits it to
 
 Transmit a file to the nodes allocated to a Slurm job.
 
-### %scancel (TBD)
+### %scancel
 
 Used to signal jobs or job steps that are under the control of Slurm.
 
-### %scontrol (TBC)
+### %scontrol
 
 Used view and modify Slurm configuration and state.
 
-### %sdiag (TBC)
+### %sdiag
 
 Scheduling diagnostic tool for Slurm.
+Is modal.
 
-### %sinfo (TBD)
+### %sinfo
 
 View information about Slurm nodes and partitions.
+Is modal.
 
 ### %smap (TBC)
 
 Graphically view information about Slurm jobs, partitions, and set configurations parameters.
 
-### %sprio (TBD)
+### %sprio
 
 View the factors that comprise a job's scheduling priority.
+Is modal.
 
 ### %squeue
 
 View information about jobs located in the Slurm scheduling queue.
+Is modal.
 
 To switch to "pandas" mode simply do:
 
@@ -105,7 +111,7 @@ Now the output from %squeue will be a Pandas dataframe:
        PRIORITY          SUBMIT_TIME           START_TIME
     0     69060  2016-07-21T21:12:34  2016-07-21T21:13:21
 
-### %sreport (TBD)
+### %sreport (TBC)
 
 Generate reports from the slurm accounting data.
 
@@ -113,11 +119,12 @@ Generate reports from the slurm accounting data.
 
 Run parallel jobs.
 
-### %sshare (TBC)
+### %sshare
 
 Tool for listing the shares of associations to a cluster.
+Is modal.
 
-### %sstat (TBD)
+### %sstat (TBC)
 
 Display various status information of a running job/step.
 
