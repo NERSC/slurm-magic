@@ -76,7 +76,10 @@ class SlurmMagics(Magics):
     def sbatch(self, line, cell=None):
         """Submit a batch script to Slurm."""
         # FIXME Document further.
-        return self._execute(line, input=cell.encode(encoding='UTF-8'))
+        if cell is None:
+            return self._execute(line)
+        else:
+            return self._execute(line, input=cell.encode(encoding='UTF-8'))
 
     @line_magic
     def sbcast(self, line):
