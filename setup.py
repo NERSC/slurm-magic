@@ -11,5 +11,5 @@ setup(
         py_modules=["slurm_magic"],
         requires=["ipython"],
         url="NA",
-        version="0.0.1"
+        version="0.0.2"
 )
