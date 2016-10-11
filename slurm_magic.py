@@ -72,7 +72,7 @@ class SlurmMagics(Magics):
         """Attach to a Slurm job step."""
         pass
 
-    @cell_magic
+    @line_cell_magic
     def sbatch(self, line, cell):
         """Submit a batch script to Slurm."""
         # FIXME Document further.
