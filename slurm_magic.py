@@ -73,7 +73,7 @@ class SlurmMagics(Magics):
         pass
 
     @line_cell_magic
-    def sbatch(self, line, cell):
+    def sbatch(self, line, cell=None):
         """Submit a batch script to Slurm."""
         # FIXME Document further.
         return self._execute(line, input=cell.encode(encoding='UTF-8'))
