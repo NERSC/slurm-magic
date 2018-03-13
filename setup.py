@@ -10,6 +10,6 @@ setup(
         name="slurm-magic",
         py_modules=["slurm_magic"],
         requires=["ipython"],
-        url="NA",
-        version="0.0.4"
+        url="https://github.com/NERSC/slurm-magic",
+        version="0.0.5"
 )
