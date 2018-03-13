@@ -136,7 +136,7 @@ class SlurmMagics(Magics):
     @line_magic
     def srun(self, line):
         """Run parallel jobs."""
-        pass
+        return self._execute(line)
 
     @modal
     @line_magic
