@@ -115,7 +115,7 @@ Now the output from %squeue will be a Pandas dataframe:
 
 Generate reports from the slurm accounting data.
 
-### %srun (TBC)
+### %srun
 
 Run parallel jobs.
 
