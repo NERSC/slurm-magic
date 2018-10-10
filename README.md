@@ -139,5 +139,5 @@ Graphical user interface to view and modify Slurm state.
 What Our Users Say
 ------------------
 
-    I’ll never have to leave a notebook again
-    that’s like the ultimate dream
+    I'll never have to leave a notebook again
+    that's like the ultimate dream
