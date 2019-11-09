@@ -15,6 +15,19 @@ The `%squeue` magic command respects a "pandas" mode meaning that the result can
 This may not be the best way to handle this kind of functionality, and may change.
 Suggestions on how to handle the output are welcome --- the raw responses are not easily readable in IPython notebooks.
 
+Installation
+------------
+
+`slurm-magic` can be installed from this repository via `pip`:
+```bash
+pip install git+https://github.com/NERSC/slurm-magic.git
+```
+`conda` users can include the following in an `environment.yml` file:
+```yaml
+  - pip:
+    - git+https://github.com/NERSC/slurm-magic.git
+```
+
 SLURM Magic Commands
 --------------------
 
